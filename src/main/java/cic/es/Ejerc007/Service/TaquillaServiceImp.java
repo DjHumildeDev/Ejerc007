@@ -1,20 +1,38 @@
-package cic.es.Ejerc007;
+package cic.es.Ejerc007.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Taquilla {
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
+
+
+import cic.es.Ejerc007.DTO.EntradaDTO;
+import cic.es.Ejerc007.DTO.SalaDTO;
+import cic.es.Ejerc007.DTO.SesionDTO;
+import cic.es.Ejerc007.Repository.TaquillaRepository;
+
+@Service("CandidateService")
+@Lazy
+public class TaquillaServiceImp implements TaquillaService {
 
     // ----------------------------------------------- Atributos
+    
+    @Autowired
+    private List<EntradaDTO> entradas;
+    
+    @Autowired
+    private List<SalaDTO> salas;
 
-    List<Entrada> entradas;
+    @Autowired
+    private TaquillaRepository repoTaquilla;
 
     // -----------------------------------------------Constructores
-
-    public Taquilla() {
-
+    public TaquillaServiceImp(){
         entradas = new ArrayList<>();
+        salas = repoTaquilla.getSalas();
     }
 
     // --------------------------------------------------Métodos
@@ -26,14 +44,15 @@ public class Taquilla {
      * @param cantidad
      * @param sesion
      */
-    public boolean venderEntrada(int cantidad, Sesion sesion) {
+    @Override
+    public boolean venderEntrada(int cantidad, SesionDTO sesion) {
 
         if (entradasDisponibles(sesion) >= cantidad) {
 
             double precioTotal = descuento(cantidad);
             for (int i = 0; i < cantidad; i++) {
 
-                Entrada entrada = new Entrada(sesion, precioTotal / cantidad);
+                EntradaDTO entrada = new EntradaDTO(sesion);
                 entradas.add(entrada);
             }
             return true;
@@ -48,6 +67,7 @@ public class Taquilla {
      * 
      * @param cantidad
      */
+    @Override
     public double descuento(int cantidad) {
 
         double total = cantidad * 5;
@@ -61,10 +81,11 @@ public class Taquilla {
         return total;
     }
 
-    public int entradasVendidas(Sesion sesion) {
+    @Override
+    public int entradasVendidas(SesionDTO sesion) {
 
         int contador = 0;
-        for (Entrada entrada : entradas) {
+        for (EntradaDTO entrada : entradas) {
 
             if (entrada.getSesion() == sesion) {
                 contador++;
@@ -74,12 +95,14 @@ public class Taquilla {
         return contador;
     }
 
-    public int entradasDisponibles(Sesion sesion) {
+    @Override
+    public int entradasDisponibles(SesionDTO sesion) {
 
         return sesion.getSala().getAsientos() - entradasVendidas(sesion);
 
     }
 
+    @Override
     public boolean eliminar(int index) {
 
         if (entradas.remove(index) != null) {
@@ -91,7 +114,8 @@ public class Taquilla {
         return false;
     }
 
-    public boolean editar(int index, Entrada nueva) {
+    @Override
+    public boolean editar(int index, EntradaDTO nueva) {
 
         if (entradas.set(index, nueva) != null) {
 
@@ -102,53 +126,57 @@ public class Taquilla {
         return false;
     }
 
+    @Override
     public int entradasTotales() {
 
         return entradas.size();
     }
 
+    @Override
     public double ventasTotales() {
 
         double total = 0;
 
-        for (Entrada entrada : entradas) {
+        for (EntradaDTO entrada : entradas) {
 
-            total += entrada.getPrecio();
+            total += EntradaDTO.getPrecio();
         }
 
         return total;
     }
 
+    @Override
     public double ventasTotalesPorPelicula(String pelicula) {
 
         double total = 0;
 
-        for (Entrada entrada : entradas) {
+        for (EntradaDTO entrada : entradas) {
 
             if (entrada.getSesion().getPelicula().equalsIgnoreCase(pelicula)) {
-                total += entrada.getPrecio();
+                total += EntradaDTO.getPrecio();
             }
         }
 
         return total;
     }
 
+    @Override
     public HashMap<String, Double> ventasTotalesPeliculas() {
 
         HashMap<String, Double> estadistica = new HashMap<>();
-        for (Entrada entrada : entradas) {
+        for (EntradaDTO entrada : entradas) {
 
             if (estadistica.containsKey(entrada.getSesion().getPelicula())) {
 
                 estadistica.put(entrada.getSesion().getPelicula(),
-                        estadistica.get(entrada.getSesion().getPelicula()) + entrada.getPrecio());
+                        estadistica.get(entrada.getSesion().getPelicula()) + EntradaDTO.getPrecio());
 
             } else {
-                estadistica.put(entrada.getSesion().getPelicula(), entrada.getPrecio());
+                estadistica.put(entrada.getSesion().getPelicula(), EntradaDTO.getPrecio());
             }
 
         }
         return estadistica;
     }
-
+    
 }
