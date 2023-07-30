@@ -55,6 +55,8 @@ public class TaquillaServiceImp implements TaquillaService {
                 EntradaDTO entrada = new EntradaDTO(sesion);
                 entradas.add(entrada);
             }
+            SalaDTO sala = sesion.getSala();
+            sala.setAsientos(sala.getAsientos() - cantidad);
             return true;
         }
         return false;
