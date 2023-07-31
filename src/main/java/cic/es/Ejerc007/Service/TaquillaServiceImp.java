@@ -14,25 +14,19 @@ import cic.es.Ejerc007.DTO.SalaDTO;
 import cic.es.Ejerc007.DTO.SesionDTO;
 import cic.es.Ejerc007.Repository.TaquillaRepository;
 
-@Service("CandidateService")
+@Service("TaquillaService")
 @Lazy
 public class TaquillaServiceImp implements TaquillaService {
 
     // ----------------------------------------------- Atributos
     
-    @Autowired
     private List<EntradaDTO> entradas;
-    
-    @Autowired
-    private List<SalaDTO> salas;
 
-    @Autowired
-    private TaquillaRepository repoTaquilla;
+    private List<SalaDTO> salas;
 
     // -----------------------------------------------Constructores
     public TaquillaServiceImp(){
-        entradas = new ArrayList<>();
-        salas = repoTaquilla.getSalas();
+        salas = TaquillaRepository.getSalas();
     }
 
     // --------------------------------------------------Métodos
@@ -61,6 +55,14 @@ public class TaquillaServiceImp implements TaquillaService {
         }
         return false;
 
+    }
+    @Override
+    public String mostrarSalas(){
+        String cadenaSalas = "";
+        for(SalaDTO sala:salas){
+            cadenaSalas += sala.toString() + ",";
+        }
+        return cadenaSalas;
     }
 
     /**
@@ -181,4 +183,6 @@ public class TaquillaServiceImp implements TaquillaService {
         return estadistica;
     }
     
+  
+
 }

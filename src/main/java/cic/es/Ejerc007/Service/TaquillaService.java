@@ -40,4 +40,7 @@ public interface TaquillaService {
 
     HashMap<String, Double> ventasTotalesPeliculas();
 
+    String mostrarSalas();
+       
+
 }

@@ -5,8 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import cic.es.Ejerc007.Controller.TaquillaController;
 import cic.es.Ejerc007.DTO.SesionDTO;
-import cic.es.Ejerc007.Service.TaquillaService;
-import cic.es.Ejerc007.Service.TaquillaServiceImp;
+
 
 
 class TaquillaControllerTest {
@@ -19,10 +18,10 @@ class TaquillaControllerTest {
 
     @Test
     void testVenderEntrada(){
-        TaquillaController taquilla = new TaquillaController(new TaquillaServiceImp());
-        taquilla.vender(5, sesion);
-        
-    }
+        TaquillaController taquilla = new TaquillaController();
+       taquilla.vender(5, sesion);
+    }    
+    
     
 
 }
