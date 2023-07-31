@@ -25,5 +25,10 @@ public class SalaDTO {
         this.nombre = nombre;
     }
 
+    @Override
+    public String toString() {
+        return "SalaDTO [asientos=" + asientos + ", nombre=" + nombre + "]";
+    }
+
     
 }

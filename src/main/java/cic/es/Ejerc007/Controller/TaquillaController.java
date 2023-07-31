@@ -12,20 +12,28 @@ import cic.es.Ejerc007.Exceptions.VentaException;
 import cic.es.Ejerc007.Service.TaquillaService;
 
 @RestController
-@RequestMapping("/taquilla")
+@RequestMapping("/")
 public class TaquillaController {
     
 
     @Autowired
     private TaquillaService taquillaService;
 
-    @Autowired
-    public TaquillaController(TaquillaService taquillaService){
-        this.taquillaService = taquillaService;
+    
+  
+
+    public TaquillaController() {
+    }
+
+    @GetMapping
+    @RequestMapping("/taquilla")
+    public String mostrarSalas() {
+        return taquillaService.mostrarSalas();
     }
 
 
-    @PostMapping(path = "/vender/{cantidad}/{sesion}")
+
+    @PostMapping(path = "/taquilla/vender/{cantidad}/{sesion}")
     public String vender(@PathVariable("cantidad") int cantidad,@PathVariable("sesion") SesionDTO sesion){
         if(taquillaService.venderEntrada(cantidad, sesion))
             return cantidad +" Entradas vendidas  para la sesion "+sesion.getPelicula() + "de las: " + sesion.getHora();
@@ -36,7 +44,7 @@ public class TaquillaController {
 
 
     @GetMapping
-    @RequestMapping(path = "/vendidas/{sesion}")
+    @RequestMapping(path = "/taquilla/vendidas/{sesion}")
     public String VendidasSesion(@PathVariable("sesion") SesionDTO sesion){
 
         int cantidad = taquillaService.entradasVendidas(sesion);
