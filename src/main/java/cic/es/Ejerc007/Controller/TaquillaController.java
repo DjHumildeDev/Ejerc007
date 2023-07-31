@@ -28,6 +28,12 @@ public class TaquillaController {
     }
 
     @GetMapping
+    @RequestMapping("/")
+    public String Abierta() {
+        return "Hola la taquilla esta abierta";
+    }
+
+    @GetMapping
     @RequestMapping("/taquilla")
     public String mostrarSalas() {
         return taquillaService.mostrarSalas();
@@ -37,8 +43,6 @@ public class TaquillaController {
 
     @PostMapping(path = "/taquilla/vender/{cantidad}/{id}")
     public String vender(@PathVariable("cantidad") int cantidad,@PathVariable("id") int id){
-        
-        
         List<SesionDTO> sesiones = taquillaService.getSesiones();
 
         SesionDTO sesion = (SesionDTO) sesiones.stream().filter(x -> x.getId() == id);
