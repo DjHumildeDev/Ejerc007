@@ -1,6 +1,7 @@
 package cic.es.Ejerc007.Service;
 
 import java.util.HashMap;
+import java.util.List;
 
 import cic.es.Ejerc007.DTO.EntradaDTO;
 import cic.es.Ejerc007.DTO.SesionDTO;
@@ -14,7 +15,7 @@ public interface TaquillaService {
      * @param cantidad
      * @param sesion
      */
-    boolean venderEntrada(int cantidad, SesionDTO sesion);
+    boolean venderEntrada(int cantidad, int id);
 
     /**
      * Método para aplicar el descuento en función de la cantidad de
@@ -41,6 +42,10 @@ public interface TaquillaService {
     HashMap<String, Double> ventasTotalesPeliculas();
 
     String mostrarSalas();
+    
        
+    List<SesionDTO> getSesiones();
 
+
+    void setSesiones(List<SesionDTO> sesiones);
 }

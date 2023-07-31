@@ -19,8 +19,10 @@ class TaquillaControllerTest {
     @Test
     void testVenderEntrada(){
         TaquillaController taquilla = new TaquillaController();
-       taquilla.vender(5, sesion);
-    }    
+        taquilla.vender(5, " sesion 1");
+    }   
+    
+    
     
     
 
