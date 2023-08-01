@@ -15,7 +15,6 @@ public  class TaquillaRepository {
         salas.add(new SalaDTO(100, "Sala 1"));
         salas.add(new SalaDTO(50, "Sala 2"));
         salas.add(new SalaDTO(20, "Sala 3"));
-
     }
 
 

@@ -4,10 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-
 
 import cic.es.Ejerc007.DTO.EntradaDTO;
 import cic.es.Ejerc007.DTO.SalaDTO;
@@ -19,13 +17,16 @@ import cic.es.Ejerc007.Repository.TaquillaRepository;
 public class TaquillaServiceImp implements TaquillaService {
 
     // ----------------------------------------------- Atributos
-    
-    private List<EntradaDTO> entradas;
+
+    private List<EntradaDTO> entradas = new ArrayList<>();;
 
     private List<SalaDTO> salas;
 
+    private List<SesionDTO> sesiones = new ArrayList<>();
+
+    
     // -----------------------------------------------Constructores
-    public TaquillaServiceImp(){
+    public TaquillaServiceImp() {
         salas = TaquillaRepository.getSalas();
     }
 
@@ -39,27 +40,41 @@ public class TaquillaServiceImp implements TaquillaService {
      * @param sesion
      */
     @Override
-    public boolean venderEntrada(int cantidad, SesionDTO sesion) {
+    public boolean venderEntrada(int cantidad, int id) {
 
-        if (entradasDisponibles(sesion) >= cantidad) {
+        SesionDTO sesionVenta = null;
+        for (SesionDTO sesion : sesiones) {
+            if (sesion.getId() == id)
+                sesionVenta = sesion;
+        }
+        if (sesionVenta != null) {
+            if (entradasDisponibles(sesionVenta) >= cantidad) {
 
-            double precioTotal = descuento(cantidad);
-            for (int i = 0; i < cantidad; i++) {
+                double precioTotal = descuento(cantidad);
+                for (int i = 0; i < cantidad; i++) {
 
-                EntradaDTO entrada = new EntradaDTO(sesion);
-                entradas.add(entrada);
+                    EntradaDTO entrada = new EntradaDTO(sesionVenta);
+                    entradas.add(entrada);
+                }
+                SalaDTO sala = sesionVenta.getSala();
+                sala.setAsientos(sala.getAsientos() - cantidad);
+                return true;
             }
-            SalaDTO sala = sesion.getSala();
-            sala.setAsientos(sala.getAsientos() - cantidad);
-            return true;
         }
         return false;
+    }
+
+    @Override
+    public int entradasDisponibles(SesionDTO sesion) {
+
+        return sesion.getSala().getAsientos() - entradasVendidas(sesion);
 
     }
+
     @Override
-    public String mostrarSalas(){
+    public String mostrarSalas() {
         String cadenaSalas = "";
-        for(SalaDTO sala:salas){
+        for (SalaDTO sala : salas) {
             cadenaSalas += sala.toString() + ",";
         }
         return cadenaSalas;
@@ -97,13 +112,6 @@ public class TaquillaServiceImp implements TaquillaService {
         }
 
         return contador;
-    }
-
-    @Override
-    public int entradasDisponibles(SesionDTO sesion) {
-
-        return sesion.getSala().getAsientos() - entradasVendidas(sesion);
-
     }
 
     @Override
@@ -182,7 +190,14 @@ public class TaquillaServiceImp implements TaquillaService {
         }
         return estadistica;
     }
-    
-  
+
+    public List<SesionDTO> getSesiones() {
+        return sesiones;
+    }
+
+    public void setSesiones(List<SesionDTO> sesiones) {
+        this.sesiones = sesiones;
+    }
+
 
 }

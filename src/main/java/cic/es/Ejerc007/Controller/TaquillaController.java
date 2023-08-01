@@ -1,5 +1,7 @@
 package cic.es.Ejerc007.Controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +28,12 @@ public class TaquillaController {
     }
 
     @GetMapping
+    @RequestMapping("/")
+    public String Abierta() {
+        return "Hola la taquilla esta abierta";
+    }
+
+    @GetMapping
     @RequestMapping("/taquilla")
     public String mostrarSalas() {
         return taquillaService.mostrarSalas();
@@ -33,9 +41,13 @@ public class TaquillaController {
 
 
 
-    @PostMapping(path = "/taquilla/vender/{cantidad}/{sesion}")
-    public String vender(@PathVariable("cantidad") int cantidad,@PathVariable("sesion") SesionDTO sesion){
-        if(taquillaService.venderEntrada(cantidad, sesion))
+    @PostMapping(path = "/taquilla/vender/{cantidad}/{id}")
+    public String vender(@PathVariable("cantidad") int cantidad,@PathVariable("id") int id){
+        List<SesionDTO> sesiones = taquillaService.getSesiones();
+
+        SesionDTO sesion = (SesionDTO) sesiones.stream().filter(x -> x.getId() == id);
+
+        if(taquillaService.venderEntrada(cantidad, id))
             return cantidad +" Entradas vendidas  para la sesion "+sesion.getPelicula() + "de las: " + sesion.getHora();
         
         else
